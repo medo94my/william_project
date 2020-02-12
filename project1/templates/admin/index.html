@@ -1,0 +1,85 @@
+﻿{% extends 'admin/admin_layout.html'%}
+{% block admin%}
+        <!-- /. NAV TOP  -->
+        <!-- <nav class="navbar-default navbar-side" role="navigation">
+            <div class="sidebar-collapse">
+                <ul class="nav" id="main-menu">
+
+
+
+                    <li class="active-link">
+                        <a href="{{url_for ('admin' )}}"><i class="fa fa-desktop "></i>Dashboard <span
+                                class="badge">Included</span></a>
+                    </li>
+
+
+                    <li>
+                        <a href="{{url_for ('blank')}}"><i class="fa fa-table "></i>UI Elements <span
+                                class="badge">Included</span></a>
+                    </li>
+                    <li>
+                        <a href="{{url_for ('ui')}}"><i class="fa fa-edit "></i>Blank Page <span
+                                class="badge">Included</span></a>
+                    </li>
+                </ul>
+            </div>
+
+        </nav> -->
+        <!-- /. NAV SIDE  -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h2>ADMIN DASHBOARD</h2>
+                    </div>
+                </div>
+                <!-- /. ROW  -->
+                <hr />
+                <div class="row">
+                    <div class="col-lg-12 ">
+                        <div class="alert alert-info">
+                            <strong>Welcome Jhon Doe ! </strong> You Have No pending Task For Today.
+                        </div>
+
+                    </div>
+                </div>
+                <!-- /. ROW  -->
+                <div class="row text-center pad-top">
+                    <div class="col-lg-4 col-md-4 col-sm-2 col-xs-6">
+                        <div class="div-square">
+                            <a href="{{url_for ('blank')}}">
+                                <i class="fa fa-circle-o-notch fa-5x"></i>
+                                <h4>Check Data</h4>
+                            </a>
+                        </div>
+
+
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-2 col-xs-6">
+                        <div class="div-square">
+                            <a href="{{url_for ('blank')}}">
+                                <i class="fa fa-clipboard fa-5x"></i>
+                                <h4>See Users</h4>
+                            </a>
+                        </div>
+
+
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-2 col-xs-6">
+                        <div class="div-square">
+                            <a href="{{url_for ('blank')}}">
+                                <i class="fa fa-key fa-5x"></i>
+                                <h4>Admin </h4>
+                            </a>
+                        </div>
+
+
+                    </div>
+                 
+                </div>
+                <!-- /. ROW  -->
+            
+       
+                <!-- /. ROW  -->
+               
+                <!-- /. ROW  -->
+            </div>
+  {%endblock%}

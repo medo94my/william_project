@@ -1,0 +1,38 @@
+{%extends 'layouts.html'%}
+
+{% block content%}
+<div class="content-section">
+    <form method="POST" action="/Vernam2">
+        {{ form.hidden_tag() }}
+        <fieldset class="form-group">
+            <legend class="border-bottom mb-4"> Vernam </legend>
+            <div class="form-group">
+                {{ form.encryptedmessage.label(class="form-control-label") }}
+                {% if form.encryptedmessage.errors %}
+                    {{ form.encryptedmessage(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.encryptedmessage.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.encryptedmessage(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+        </fieldset>
+        <div class="form-group">
+            {{ form.submit(class="btn btn-outline-info") }}
+        </div>
+    </form>
+</div>
+<div class="border-top pt-3">
+<hr>
+    <div class="container">
+        {% if d %}
+        <legend>Your ciphered dcrypted message is :<legend>
+           <p>{{d}}</p>        
+        {% endif%}
+    </div>         
+</div>
+</div>
+{% endblock %}

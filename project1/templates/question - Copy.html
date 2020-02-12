@@ -1,0 +1,44 @@
+{%extends 'layouts.html'%}
+
+{% block content %}
+    <div class="content-section">
+        <div class="container">
+            <form method="post" action="">
+                {% set i=0%}
+                {% for item in data%}
+                {{ form.csrf_token() }}
+                
+                <div class="row">   
+                    <div class="col-lg-12 my-2">
+                        <div class="card">
+                            <div class="card-body">
+                            <h5 class="card-title">Question {{item.id}}</h5>
+                            <p class="card-text">{{item.Question}}</p>
+                               <input type="hidden" name="id_mf" value="{{item.id}}"> 
+                                <div class="form-group">
+                                {{ form.answer.label(class="form-control-label") }}
+                            {% if form.answer.errors %}
+                                {{ form.answer(class="form-control form-control-lg is-invalid") }}
+                                <div class="invalid-feedback">
+                                     {% for error in form.answer+i.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ form.answer(class="form-control form-control-lg") }}
+                            {% endif %}
+                        </div>
+                        </div>
+                      </div>    
+                    </div>
+                    
+                </div>
+                
+                {%endfor%}
+                    <div class="form-group my-5">
+                        {{ form.submit(class="btn btn-outline-info") }}
+                    </div>
+            </form>
+        </div>
+    </div>
+{% endblock content %}

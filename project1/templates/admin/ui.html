@@ -1,0 +1,31 @@
+﻿{%extends 'admin/admin_layout.html'%}
+       {%block admin%}
+                        <h5>Table  Sample One</h5>
+                        <table class="table table-striped table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Student ID</th>
+                                    <th>answer1</th>
+                                    <th>answer2</th>
+                                    <th>answer3</th>
+                                    <th>answer4</th>
+                                    <th>answer5</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for user in data %}
+                                <tr>
+                                    <td>{{user.Submitted_by}}</td>
+                                    <td>{{user.Answers1}}</td>
+                                    <td>{{user.Answers2}}</td>
+                                    <td>{{user.Answer3}}</td>
+                                    <td>{{user.Answers4}}</td>
+                                    <td>{{user.Answers5}}</td>
+                                </tr>
+                               {% endfor %}
+                              
+                            </tbody>
+                        </table>
+
+                    </div>
+                    {%endblock%}

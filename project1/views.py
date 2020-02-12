@@ -1,13 +1,12 @@
 from flask import render_template ,url_for , redirect , flash , request 
-    from project1 import app , db , bcrypt
-from project1.forms import RegistrationForm , LoginForm , CipherForm
-from project1.Model import User
+from project1 import app , db , bcrypt, Vernam
+from project1.forms import RegistrationForm , LoginForm,adminForm , CipherForm ,QuestionForm ,VernamForm, VernamdecryptForm
+from project1.Model import User ,Question, Answers
 from flask_login import login_user, current_user, logout_user, login_required, LoginManager
+import random, math
 
-
-
-
-@app.route('/' , methods=['GET', 'POST'])
+key=[]
+@app.route('/' , methods=['GET','POST'])
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
@@ -17,8 +16,6 @@ def login():
         user = User.query.filter_by(email = form.email.data).first()
         password = user.password
         if user and bcrypt.check_password_hash(user.password,form.password.data):
-            # session['logged_in'] = True
-            # session['name'] = user.name
             login_user(user, remember = form.remember.data)
             next_page = request.args.get('next')
             return redirect(next_page) if next_page else redirect(url_for('index'))
@@ -63,18 +60,143 @@ def cipher():
         for x in message:
             if x in alphabet:
                 cipher += alphabet[(alphabet.index(x)+int(shift))%(len(alphabet))]
-        
-    
     return render_template('cipher.html', form = form , cipher = cipher)
 
-@app.route('/revision notes')
+@app.route('/Vernam', methods = ['GET', 'POST']) 
 @login_required
-def guide():
-    return render_template('guide.html')
+def vernam():
+    
+    form = VernamForm()
+    x=''
+    if request.method == 'POST':
+        message = form.message.data
+        x ,y = getmessage(message)
+        key.append(y)
+        print(key)
+    return render_template('vernam.html', form = form ,x =x )
+print('the key is',key)
+@app.route('/Vernam2', methods = ['GET', 'POST']) 
+@login_required
+def Decrypt():
+    print(key)
+    d=''
+    form = VernamdecryptForm()
+    if request.method == 'POST':
+        message = form.encryptedmessage.data
+        # x ,y = getmessage(message)
+        d=getdecryptmessage(key[0],message)
+        key.pop()
+        print(d)
+    return render_template('encryptlayout.html', form = form ,d=d )
 
-@app.route('/admin')
+def encrypt(message,KEY):
+    cipher = ''
+    count = 0
+    for char in message:
+        cipher += chr(ord(char) * ord(KEY[count]))
+        count += 1
+        if count == len(message):
+            count = 0
+    return cipher
+
+def getmessage(message):
+    message = message
+    digits = "0123456789"
+    KEY = ''
+    for x in range(len(message)):
+        KEY += digits[math.floor(random.random()*10)]
+    a = encrypt(message, KEY)
+    return a, KEY
+
+def decrypt(encryptedmessage, KEY):
+    deciphered = ''
+    pointer = 0
+    for char in encryptedmessage:
+        deciphered += chr(ord(char) // ord(KEY[pointer]))
+        pointer += 1
+        if pointer == len(encryptedmessage):
+            pointer = 0
+    print("Your original message: " + deciphered)
+    return deciphered
+
+def getdecryptmessage(KEY,w):
+    encryptedmessage = w
+    b = decrypt(encryptedmessage, KEY)
+    return b
+
+# def menu():
+#     while True:
+#         response = input("\n\n Vernam Cipher \n\n [cipher] to cipher \n [decrypt] to decrypt \n\n" )
+#         if response == "cipher":
+#             a, KEY = getmessage()
+#         elif response == "decrypt":
+#             getdecryptmessage(KEY)
+        
+# men
+
+
+
+
+    
+
+@app.route('/resources')
+@login_required
+def resources():
+    return render_template('resource.html')
+
+@app.route('/Questionnaire' , methods = ['GET', 'POST'])
+@login_required
+def questionnaire():
+    data=Question.query.all()
+    form = QuestionForm()
+    if form.validate_on_submit():
+        answer = form.answer.data
+        answer2 = form.answer2.data
+        answer3 = form.answer3.data
+        answer4= form.answer4.data
+        answer5 = form.answer5.data
+        by=current_user.name
+        ans = Answers( Answers1 = answer, Answers2 = answer2, Answer3 = answer3, Answers4 = answer4, Answers5 = answer5
+         , Submitted_by =by)
+        db.session.add(ans)
+        db.session.commit()
+        db.session.close()  
+        flash('Your Answer has been submitted!', 'success')
+        return redirect(url_for('login'))
+    else:
+        print(form.errors)
+    return render_template('question.html', form = form, data=data)
+
+@app.route('/admin',methods=['GET','POST'])
 def admin():
-    return 'admin'
+    form = adminForm()
+    if form.validate_on_submit():
+        admin =  form.admin.data
+        password = form.password.data
+        if admin=='admin' and password =='admin':
+           
+            # login_user(user, remember = form.remember.data)
+            next_page = request.args.get('next')
+            return redirect(next_page) if next_page else redirect(url_for('Dashboard'))
+            flash('You are logged in', 'success')
+            return redirect(url_for('Dashboard'))
+        else:
+            flash('Login Unsuccessful. Please check username and password', 'danger')
+    return render_template('admin/admin_login.html',form=form)
+
+@app.route('/Dashboard')
+def Dashboard():
+    return render_template('admin/index.html')
+@app.route('/Dashboard/ui')
+def ui():
+    data=Answers.query.all()
+    return render_template('admin/ui.html', data=data)
+
+
+@app.route('/Dashboard/user-recorded')
+def blank():
+    data=User.query.all()
+    return render_template('admin/blank.html',data=data)
 
 
 @app.route('/logout')
